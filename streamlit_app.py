@@ -2,6 +2,7 @@
 import streamlit as st
 # from snowflake.snowpark.context import get_active_session
 from snowflake.snowpark.functions import col
+import requests
 cnx = st.connection("snowflake")
 session = cnx.session()
 
@@ -36,6 +37,8 @@ if ingredients_list:
     ingredients_string = ''
     for x in ingredients_list:
         ingredients_string += x + ' '
+        fruityvice_response = requests.get("https://fruityvice.com/api/fruit/watermelon")
+        fv_df = st.dataframe(data=fruityvice_response.json(), use_container_width=True)
 
     # st.write(ingredients_string)
 
@@ -51,8 +54,4 @@ if ingredients_list:
 
         st.success("Your Smoothie is ordered, "+name_on_smoothie+"!", icon="✅")
 
-# API WORK
-import requests
-fruityvice_response = requests.get("https://fruityvice.com/api/fruit/watermelon")
-#st.text(fruityvice_response)
-fv_df = st.dataframe(data=fruityvice_response.json(), use_container_width=True)
+
